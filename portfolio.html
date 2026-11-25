@@ -1,0 +1,2934 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collins Saboke — Full-Stack Web Developer & Systems-Oriented Software Engineer</title>
+    <meta name="description" content="Portfolio of Collins Saboke, Full-Stack Web Developer & Systems-Oriented Software Engineer based in Nairobi, Kenya. Specializing in production web platforms, EdTech, and Safaricom M-Pesa Daraja API integrations.">
+    <style>
+        /* ==========================================================================
+           1. DESIGN TOKENS & THEME SYSTEM (ZERO EXTERNAL DEPENDENCIES)
+           ========================================================================== */
+        :root {
+            --bg-primary: #060911;
+            --bg-secondary: #0c1220;
+            --bg-elevated: #11192c;
+            --bg-card: rgba(17, 25, 44, 0.78);
+            --bg-code: #04070d;
+            --border-subtle: rgba(148, 163, 184, 0.14);
+            --border-strong: rgba(148, 163, 184, 0.28);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #8b9bb4;
+            --accent-emerald: #10b981;
+            --accent-emerald-hover: #059669;
+            --accent-emerald-soft: rgba(16, 185, 129, 0.14);
+            --accent-cyan: #06b6d4;
+            --accent-cyan-soft: rgba(6, 182, 212, 0.14);
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --shadow-card: 0 20px 45px -15px rgba(0, 0, 0, 0.65);
+            --shadow-glow: 0 0 40px -10px rgba(16, 185, 129, 0.25);
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-pill: 9999px;
+            --container-max: 1180px;
+            --transition: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        html[data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-elevated: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.92);
+            --bg-code: #0f172a;
+            --border-subtle: rgba(15, 23, 42, 0.1);
+            --border-strong: rgba(15, 23, 42, 0.2);
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-emerald: #059669;
+            --accent-emerald-hover: #047857;
+            --accent-emerald-soft: rgba(5, 150, 105, 0.1);
+            --accent-cyan: #0284c7;
+            --accent-cyan-soft: rgba(2, 132, 199, 0.1);
+            --shadow-card: 0 18px 38px -15px rgba(15, 23, 42, 0.1);
+            --shadow-glow: 0 0 35px -10px rgba(5, 150, 105, 0.18);
+        }
+
+        /* ==========================================================================
+           2. RESET & BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+            color: inherit;
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--container-max);
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+        }
+
+        /* Subtle Ambient Engineering Grid */
+        .bg-grid {
+            background-image:
+                linear-gradient(to right, rgba(16, 185, 129, 0.045) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(16, 185, 129, 0.045) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* ==========================================================================
+           3. STICKY NAVIGATION HEADER & AVAILABILITY BAR
+           ========================================================================== */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(6, 9, 17, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        html[data-theme="light"] .site-header {
+            background: rgba(248, 250, 252, 0.88);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 68px;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-emerald), var(--accent-cyan));
+            color: #04100b;
+            font-weight: 800;
+            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25);
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .brand-name {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .brand-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.35rem;
+        }
+
+        .nav-link {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding: 0.35rem 0;
+            position: relative;
+            transition: color var(--transition);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-emerald);
+        }
+
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2px;
+            height: 2px;
+            border-radius: 2px;
+            background: var(--accent-emerald);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .icon-btn:hover {
+            border-color: var(--accent-emerald);
+            color: var(--text-primary);
+        }
+
+        .btn-primary-sm {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.52rem 0.95rem;
+            border-radius: var(--radius-sm);
+            background: var(--accent-emerald);
+            color: #03150e;
+            font-size: 0.82rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .btn-primary-sm:hover {
+            background: var(--accent-emerald-hover);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .mobile-toggle {
+            display: none;
+        }
+
+        /* Mobile Drawer */
+        .mobile-drawer {
+            display: none;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding: 1rem 1.25rem 1.25rem;
+            border-top: 1px solid var(--border-subtle);
+            background: var(--bg-secondary);
+        }
+
+        .mobile-drawer.open {
+            display: flex;
+        }
+
+        .mobile-drawer a {
+            padding: 0.65rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .mobile-drawer a:hover {
+            background: var(--bg-elevated);
+            color: var(--accent-emerald);
+        }
+
+        /* ==========================================================================
+           4. RECRUITER QUICK-BRIEF BAR
+           ========================================================================== */
+        .recruiter-strip {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.65rem 0;
+            font-size: 0.8rem;
+        }
+
+        .recruiter-strip-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .role-fit-list {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .role-fit-label {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-right: 0.25rem;
+        }
+
+        .role-pill {
+            padding: 0.2rem 0.6rem;
+            border-radius: var(--radius-pill);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 0.74rem;
+            font-weight: 500;
+        }
+
+        .email-quick-box {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .email-badge {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--accent-emerald);
+            background: var(--accent-emerald-soft);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-sm);
+        }
+
+        /* ==========================================================================
+           5. EXECUTIVE HERO SECTION
+           ========================================================================== */
+        .hero-section {
+            position: relative;
+            padding: 4.5rem 0 4.25rem;
+            border-bottom: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 720px;
+            height: 360px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.14) 0%, rgba(6, 182, 212, 0.05) 45%, transparent 72%);
+            pointer-events: none;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.85fr;
+            gap: 2.75rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: var(--radius-pill);
+            background: var(--bg-elevated);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1.35rem;
+        }
+
+        .pulse-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulseDot 2s infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulseDot {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.65); }
+            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .hero-title {
+            font-size: clamp(2.1rem, 4.2vw, 3.35rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.13;
+            margin-bottom: 1.15rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(120deg, var(--accent-emerald), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-summary {
+            font-size: 1.06rem;
+            color: var(--text-secondary);
+            max-width: 620px;
+            margin-bottom: 1.85rem;
+            line-height: 1.68;
+        }
+
+        .hero-cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.25rem;
+        }
+
+        .btn-cta-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.82rem 1.35rem;
+            border-radius: var(--radius-md);
+            background: var(--accent-emerald);
+            color: #03150e;
+            font-weight: 700;
+            font-size: 0.92rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -6px rgba(16, 185, 129, 0.4);
+            transition: all var(--transition);
+        }
+
+        .btn-cta-primary:hover {
+            background: var(--accent-emerald-hover);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .btn-cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.82rem 1.25rem;
+            border-radius: var(--radius-md);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-strong);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .btn-cta-secondary:hover {
+            border-color: var(--accent-emerald);
+            color: var(--accent-emerald);
+            transform: translateY(-2px);
+        }
+
+        /* Impact Metrics Strip */
+        .metrics-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.85rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .metric-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 0.85rem 0.95rem;
+        }
+
+        .metric-value {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--accent-emerald);
+            margin-bottom: 0.15rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.35;
+        }
+
+        /* Executive Candidate Dossier Card */
+        .dossier-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+            overflow: hidden;
+        }
+
+        .dossier-header {
+            padding: 0.85rem 1.15rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .window-dots {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-r { background: #ef4444; }
+        .dot-y { background: #f59e0b; }
+        .dot-g { background: #10b981; }
+
+        .dossier-body {
+            padding: 1.35rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            line-height: 1.65;
+            background: var(--bg-code);
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+
+        .tok-key { color: #34d399; }
+        .tok-str { color: #fbbf24; }
+        .tok-cyan { color: #38bdf8; }
+        .tok-muted { color: #64748b; }
+
+        .dossier-footer {
+            padding: 0.85rem 1.15rem;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            font-size: 0.78rem;
+        }
+
+        /* ==========================================================================
+           6. SHARED SECTION LAYOUT & HEADINGS
+           ========================================================================== */
+        .section {
+            padding: 4.75rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-alt {
+            background: var(--bg-secondary);
+        }
+
+        .section-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-emerald);
+            margin-bottom: 0.45rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.65rem, 3vw, 2.3rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            max-width: 650px;
+            font-size: 0.96rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ==========================================================================
+           7. FEATURED ENGINEERING CASE STUDIES
+           ========================================================================== */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 0.95rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent-emerald);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-emerald);
+            border-color: var(--accent-emerald);
+            color: #03150e;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: transform var(--transition), border-color var(--transition);
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16, 185, 129, 0.48);
+        }
+
+        .project-card.hidden {
+            display: none;
+        }
+
+        .project-top {
+            padding: 1.35rem 1.5rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.11), rgba(6, 182, 212, 0.06));
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .project-cat-tag {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-pill);
+            background: var(--accent-emerald-soft);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-emerald);
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-bottom: 0.55rem;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.015em;
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--accent-emerald);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            padding: 0.28rem 0.6rem;
+            border-radius: var(--radius-pill);
+            white-space: nowrap;
+        }
+
+        .project-body {
+            padding: 1.45rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .project-summary {
+            font-size: 0.91rem;
+            color: var(--text-secondary);
+            line-height: 1.62;
+        }
+
+        .engineering-brief {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 0.95rem 1.05rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            font-size: 0.82rem;
+        }
+
+        .brief-row strong {
+            color: var(--accent-emerald);
+            font-weight: 700;
+        }
+
+        .brief-row span {
+            color: var(--text-secondary);
+        }
+
+        .impact-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.42rem;
+            font-size: 0.83rem;
+            color: var(--text-secondary);
+        }
+
+        .impact-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.55rem;
+        }
+
+        .check-icon {
+            color: var(--accent-emerald);
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: auto;
+            padding-top: 0.35rem;
+        }
+
+        .tech-tag {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            padding: 0.24rem 0.55rem;
+            border-radius: 6px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .project-actions {
+            padding: 0 1.5rem 1.45rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+        }
+
+        .btn-project-live {
+            flex: 1;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            padding: 0.68rem 1rem;
+            border-radius: var(--radius-sm);
+            background: var(--accent-emerald);
+            color: #03150e;
+            font-size: 0.83rem;
+            font-weight: 700;
+            transition: all var(--transition);
+        }
+
+        .btn-project-live:hover {
+            background: var(--accent-emerald-hover);
+            color: #ffffff;
+        }
+
+        .btn-project-arch {
+            flex: 1;
+            min-width: 170px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            padding: 0.68rem 1rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-strong);
+            color: var(--text-primary);
+            font-size: 0.83rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .btn-project-arch:hover {
+            border-color: var(--accent-emerald);
+            color: var(--accent-emerald);
+        }
+
+        /* ==========================================================================
+           8. INTERACTIVE M-PESA DARAJA API & SECURITY SANDBOX
+           ========================================================================== */
+        .sandbox-grid {
+            display: grid;
+            grid-template-columns: 0.92fr 1.08fr;
+            gap: 1.75rem;
+            align-items: start;
+        }
+
+        .panel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+
+        .panel-pad {
+            padding: 1.5rem;
+        }
+
+        .panel-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1.15rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .sim-state-pill {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-pill);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-strong);
+            color: var(--text-secondary);
+        }
+
+        .sim-state-pill.running {
+            background: rgba(245, 158, 11, 0.16);
+            border-color: rgba(245, 158, 11, 0.45);
+            color: #fbbf24;
+        }
+
+        .sim-state-pill.success {
+            background: var(--accent-emerald-soft);
+            border-color: rgba(16, 185, 129, 0.45);
+            color: var(--accent-emerald);
+        }
+
+        .sim-state-pill.failed {
+            background: rgba(244, 63, 94, 0.15);
+            border-color: rgba(244, 63, 94, 0.45);
+            color: #fb7185;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.68rem 0.85rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-strong);
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            transition: border-color var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-emerald);
+        }
+
+        .input-prefix-wrap {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .input-prefix {
+            display: flex;
+            align-items: center;
+            padding: 0 0.75rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-strong);
+            border-right: none;
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 0.84rem;
+            color: var(--text-muted);
+        }
+
+        .input-prefix-wrap .form-control {
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+
+        .outcome-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.45rem;
+        }
+
+        .outcome-btn {
+            padding: 0.55rem 0.45rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+            transition: all var(--transition);
+        }
+
+        .outcome-btn.active {
+            background: var(--accent-emerald-soft);
+            border-color: var(--accent-emerald);
+            color: var(--accent-emerald);
+        }
+
+        .trace-list {
+            margin-top: 1.15rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .trace-step {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.55rem 0.75rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            color: var(--text-muted);
+        }
+
+        .trace-step.running {
+            border-color: rgba(245, 158, 11, 0.45);
+            color: #fbbf24;
+        }
+
+        .trace-step.done {
+            border-color: rgba(16, 185, 129, 0.45);
+            color: var(--accent-emerald);
+        }
+
+        .trace-step.error {
+            border-color: rgba(244, 63, 94, 0.45);
+            color: #fb7185;
+        }
+
+        /* Code Inspector Panel */
+        .inspector-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.85rem 1.15rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .tab-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .code-tab {
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            background: transparent;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .code-tab.active {
+            background: var(--accent-emerald-soft);
+            border-color: rgba(16, 185, 129, 0.35);
+            color: var(--accent-emerald);
+        }
+
+        .code-viewport {
+            background: var(--bg-code);
+            color: #e2e8f0;
+            padding: 1.35rem;
+            font-family: var(--font-mono);
+            font-size: 0.79rem;
+            line-height: 1.65;
+            min-height: 365px;
+            overflow-x: auto;
+        }
+
+        .inspector-footer {
+            padding: 0.85rem 1.15rem;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================================================
+           9. TECHNICAL COMPETENCIES MATRIX
+           ========================================================================== */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.35rem;
+        }
+
+        .skill-pillar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .pillar-head {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pillar-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--accent-emerald-soft);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-emerald);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .pillar-title {
+            font-size: 1.08rem;
+            font-weight: 700;
+        }
+
+        .pillar-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .skill-chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+
+        .skill-chip {
+            padding: 0.35rem 0.7rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            font-family: var(--font-mono);
+            font-size: 0.76rem;
+            color: var(--text-primary);
+        }
+
+        /* ==========================================================================
+           10. EXPERIENCE, AFFILIATIONS & EDUCATION TIMELINE
+           ========================================================================== */
+        .career-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 1.75rem;
+        }
+
+        .timeline-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1.15rem;
+        }
+
+        .timeline-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-left: 3px solid var(--accent-emerald);
+            border-radius: var(--radius-md);
+            padding: 1.35rem 1.45rem;
+        }
+
+        .timeline-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .timeline-badge {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--accent-emerald);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .timeline-loc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .timeline-role {
+            font-size: 1.08rem;
+            font-weight: 700;
+            margin-bottom: 0.45rem;
+        }
+
+        .timeline-desc {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .coursework-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.55rem;
+            margin-top: 0.9rem;
+        }
+
+        .course-item {
+            padding: 0.55rem 0.7rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        /* ==========================================================================
+           11. RECRUITER & HIRING MANAGER CONTACT HUB
+           ========================================================================== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 0.95fr 1.05fr;
+            gap: 1.75rem;
+            align-items: start;
+        }
+
+        .contact-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .direct-channel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.95rem 1.05rem;
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 0.8rem;
+        }
+
+        .channel-label {
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            margin-bottom: 0.15rem;
+        }
+
+        .channel-value {
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        .opp-pill-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .opp-pill {
+            padding: 0.6rem 0.7rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+            transition: all var(--transition);
+        }
+
+        .opp-pill.active {
+            background: var(--accent-emerald-soft);
+            border-color: var(--accent-emerald);
+            color: var(--accent-emerald);
+        }
+
+        .composer-actions {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 0.65rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ==========================================================================
+           12. CASE STUDY ARCHITECTURE MODAL
+           ========================================================================== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(3, 6, 12, 0.84);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 760px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75);
+        }
+
+        .modal-top {
+            padding: 1.35rem 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .modal-close {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .modal-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            padding: 0.85rem 1.5rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .modal-tab-btn {
+            padding: 0.42rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            background: transparent;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-tab-btn.active {
+            background: var(--accent-emerald-soft);
+            border-color: rgba(16, 185, 129, 0.4);
+            color: var(--accent-emerald);
+        }
+
+        .modal-content-area {
+            padding: 1.5rem;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.68;
+        }
+
+        .modal-foot {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        /* ==========================================================================
+           13. FOOTER & TOAST NOTIFICATIONS
+           ========================================================================== */
+        .site-footer {
+            padding: 2.25rem 0;
+            background: var(--bg-secondary);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-emerald);
+        }
+
+        .toast-stack {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            background: var(--bg-elevated);
+            border: 1px solid var(--accent-emerald);
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+            animation: slideUp 0.25s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           14. RESPONSIVE BREAKPOINTS
+           ========================================================================== */
+        @media (max-width: 980px) {
+            .hero-grid,
+            .sandbox-grid,
+            .career-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-grid,
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 820px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: inline-flex;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .metrics-strip,
+            .coursework-grid,
+            .opp-pill-grid,
+            .composer-actions,
+            .outcome-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ==========================================================================
+           15. PRINT / SAVE AS PDF RESUME STYLESHEET
+           ========================================================================== */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #111827 !important;
+                font-size: 11pt;
+            }
+
+            .site-header,
+            .recruiter-strip,
+            .hero-cta-row,
+            .dossier-card,
+            .filter-bar,
+            .project-actions,
+            #sandbox,
+            #contact,
+            .site-footer,
+            .modal-backdrop,
+            .toast-stack {
+                display: none !important;
+            }
+
+            .hero-section,
+            .section {
+                padding: 1.25rem 0 !important;
+                border-bottom: 1px solid #d1d5db !important;
+                background: #ffffff !important;
+            }
+
+            .hero-grid,
+            .projects-grid,
+            .skills-grid,
+            .career-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.85rem !important;
+            }
+
+            .project-card,
+            .skill-pillar,
+            .timeline-card,
+            .metric-item,
+            .engineering-brief,
+            .course-item {
+                background: #ffffff !important;
+                color: #111827 !important;
+                border: 1px solid #d1d5db !important;
+                box-shadow: none !important;
+                break-inside: avoid;
+            }
+
+            .gradient-text {
+                -webkit-text-fill-color: #065f46 !important;
+                color: #065f46 !important;
+            }
+
+            .hero-summary,
+            .section-desc,
+            .project-summary,
+            .timeline-desc,
+            .pillar-desc,
+            .impact-list li,
+            .brief-row span {
+                color: #374151 !important;
+            }
+
+            .print-contact-banner {
+                display: block !important;
+                margin-bottom: 0.75rem;
+                font-weight: 600;
+                color: #065f46;
+            }
+        }
+
+        .print-contact-banner {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toast Notifications -->
+    <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+
+    <!-- 1. TOP NAVIGATION & AVAILABILITY BAR -->
+    <header class="site-header">
+        <div class="container nav-inner">
+            <a href="#overview" class="brand">
+                <div class="brand-mark">CS</div>
+                <div class="brand-text">
+                    <span class="brand-name">Collins Saboke</span>
+                    <span class="brand-sub">Software Engineer • Nairobi, KE</span>
+                </div>
+            </a>
+
+            <nav class="nav-links" aria-label="Primary Navigation">
+                <a href="#overview" class="nav-link active">Overview</a>
+                <a href="#work" class="nav-link">Selected Work</a>
+                <a href="#sandbox" class="nav-link">API &amp; Systems Lab</a>
+                <a href="#skills" class="nav-link">Engineering Stack</a>
+                <a href="#experience" class="nav-link">Experience &amp; Education</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button id="theme-toggle" class="icon-btn" type="button" title="Toggle Dark / Light Theme">
+                    <span id="theme-icon">☀</span>
+                    <span id="theme-label">Light</span>
+                </button>
+                <button onclick="window.print()" class="icon-btn" type="button" title="Print or Save Clean PDF Resume">
+                    <span>Print / Save CV</span>
+                </button>
+                <a href="mailto:Saboke001@gmail.com?subject=Software%20Engineering%20%2F%20Web%20Development%20Opportunity" class="btn-primary-sm">
+                    <span>Email Collins</span>
+                </a>
+                <button id="mobile-toggle" class="icon-btn mobile-toggle" type="button" aria-label="Toggle Menu">
+                    ☰
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-drawer" class="mobile-drawer">
+            <a href="#overview" class="drawer-link">Overview</a>
+            <a href="#work" class="drawer-link">Selected Work &amp; Case Studies</a>
+            <a href="#sandbox" class="drawer-link">M-Pesa Daraja API &amp; Systems Lab</a>
+            <a href="#skills" class="drawer-link">Engineering Stack</a>
+            <a href="#experience" class="drawer-link">Experience &amp; Education</a>
+            <a href="#contact" class="drawer-link">Recruiter Contact Hub</a>
+        </div>
+    </header>
+
+    <!-- RECRUITER QUICK-BRIEF BAR -->
+    <div class="recruiter-strip">
+        <div class="container recruiter-strip-inner">
+            <div class="role-fit-list">
+                <span class="role-fit-label">Target Roles:</span>
+                <span class="role-pill">Full-Stack Web Developer</span>
+                <span class="role-pill">Frontend Engineer</span>
+                <span class="role-pill">Backend / API Integration Specialist</span>
+                <span class="role-pill">Junior Software Engineer</span>
+            </div>
+            <div class="email-quick-box">
+                <span class="email-badge">Saboke001@gmail.com</span>
+                <button type="button" class="icon-btn" onclick="copyToClipboard('Saboke001@gmail.com', 'Copied Saboke001@gmail.com to clipboard!')">
+                    Copy Email
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- 2. EXECUTIVE HERO SECTION -->
+        <section id="overview" class="hero-section bg-grid">
+            <div class="hero-glow"></div>
+            <div class="container hero-grid">
+                <div>
+                    <div class="print-contact-banner">
+                        Collins Saboke | Nairobi, Kenya (EAT / UTC+3) | Email: Saboke001@gmail.com | Live Apps: furaha-skool.replit.app • shimmyphotography.netlify.app
+                    </div>
+
+                    <div class="status-badge">
+                        <span class="pulse-dot"></span>
+                        <span>Available for Software Engineering &amp; Web Development Roles • Nairobi / Remote</span>
+                    </div>
+
+                    <h1 class="hero-title">
+                        Full-Stack Web Developer &amp; <span class="gradient-text">Systems-Oriented Software Engineer</span>
+                    </h1>
+
+                    <p class="hero-summary">
+                        I design, engineer, and deploy production-ready web platforms, interactive EdTech applications, and resilient <strong>Safaricom M-Pesa Daraja API</strong> payment workflows. Grounded in systems security, applied cryptography, and clean UI architecture, I take products from initial concept to live cloud deployment.
+                    </p>
+
+                    <div class="hero-cta-row">
+                        <a href="mailto:Saboke001@gmail.com?subject=Interview%20%2F%20Role%20Inquiry%20—%20Collins%20Saboke" class="btn-cta-primary">
+                            <span>Email Saboke001@gmail.com</span>
+                        </a>
+                        <button type="button" class="btn-cta-secondary" onclick="copyToClipboard('Saboke001@gmail.com', 'Email Saboke001@gmail.com copied!')">
+                            <span>Copy Direct Email</span>
+                        </button>
+                        <a href="#work" class="btn-cta-secondary">
+                            <span>View Case Studies ↓</span>
+                        </a>
+                        <a href="#sandbox" class="btn-cta-secondary">
+                            <span>Interactive API Lab →</span>
+                        </a>
+                    </div>
+
+                    <div class="metrics-strip">
+                        <div class="metric-item">
+                            <div class="metric-value">Production Apps</div>
+                            <div class="metric-label">Live EdTech &amp; commercial web platforms shipped</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">M-Pesa Daraja</div>
+                            <div class="metric-label">STK Push, OAuth2 &amp; webhook reconciliation</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">Security-First</div>
+                            <div class="metric-label">Applied cryptography &amp; systems foundation</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">End-to-End</div>
+                            <div class="metric-label">UI engineering, API integration &amp; CI/CD</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Candidate Executive Dossier Card -->
+                <aside class="dossier-card" aria-label="Candidate Summary Profile">
+                    <div class="dossier-header">
+                        <div class="window-dots">
+                            <span class="dot dot-r"></span>
+                            <span class="dot dot-y"></span>
+                            <span class="dot dot-g"></span>
+                            <span class="mono" style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.4rem;">candidate.profile.json</span>
+                        </div>
+                        <span class="mono" style="font-size: 0.72rem; color: var(--accent-emerald);">VERIFIED</span>
+                    </div>
+                    <div class="dossier-body">
+<pre>{
+  <span class="tok-key">"candidate"</span>: <span class="tok-str">"Collins Saboke"</span>,
+  <span class="tok-key">"role"</span>: <span class="tok-str">"Full-Stack Web Developer"</span>,
+  <span class="tok-key">"location"</span>: <span class="tok-str">"Nairobi, Kenya (UTC+3)"</span>,
+  <span class="tok-key">"workMode"</span>: [<span class="tok-cyan">"Remote"</span>, <span class="tok-cyan">"Hybrid"</span>, <span class="tok-cyan">"On-site"</span>],
+  <span class="tok-key">"directEmail"</span>: <span class="tok-str">"Saboke001@gmail.com"</span>,
+  <span class="tok-key">"education"</span>: <span class="tok-str">"KCA University — IT & Computing"</span>,
+  <span class="tok-key">"productionDeployments"</span>: [
+    <span class="tok-str">"https://furaha-skool.replit.app"</span>,
+    <span class="tok-str">"https://shimmyphotography.netlify.app"</span>
+  ],
+  <span class="tok-key">"coreStrengths"</span>: [
+    <span class="tok-cyan">"Responsive Frontend Architecture"</span>,
+    <span class="tok-cyan">"M-Pesa Daraja Payment APIs"</span>,
+    <span class="tok-cyan">"InfoSec & Systems Modeling"</span>
+  ]
+}</pre>
+                    </div>
+                    <div class="dossier-footer">
+                        <span style="color: var(--text-muted);">Ready for technical interviews</span>
+                        <button type="button" class="icon-btn" onclick="copyRecruiterSummary()">
+                            Copy Candidate Pitch
+                        </button>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- 3. FEATURED ENGINEERING CASE STUDIES -->
+        <section id="work" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <span class="eyebrow">01 / Engineering Portfolio</span>
+                        <h2 class="section-title">Featured Engineering Case Studies</h2>
+                        <p class="section-desc">
+                            Real-world web applications, payment integration architectures, and applied systems projects—each built with attention to performance, security, and maintainability.
+                        </p>
+                    </div>
+
+                    <div class="filter-bar" role="tablist" aria-label="Filter projects by domain">
+                        <button type="button" class="filter-btn active" data-filter="all">All Projects (4)</button>
+                        <button type="button" class="filter-btn" data-filter="edtech">Full-Stack &amp; EdTech</button>
+                        <button type="button" class="filter-btn" data-filter="fintech">FinTech &amp; APIs</button>
+                        <button type="button" class="filter-btn" data-filter="brand">Web &amp; Brand Platforms</button>
+                    </div>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- CASE STUDY 1: Furaha Skool -->
+                    <article class="project-card" data-category="edtech">
+                        <div>
+                            <div class="project-top">
+                                <div>
+                                    <span class="project-cat-tag">Full-Stack &amp; EdTech</span>
+                                    <h3 class="project-title">Furaha Skool Learning Platform</h3>
+                                </div>
+                                <span class="live-indicator">● Live Production</span>
+                            </div>
+                            <div class="project-body">
+                                <p class="project-summary">
+                                    An accessible online learning and interactive self-assessment web application built to streamline structured digital education and student onboarding across mobile and desktop browsers.
+                                </p>
+                                <div class="engineering-brief">
+                                    <div class="brief-row"><strong>Problem:</strong> <span>Learners needed a structured, zero-friction digital portal for guided onboarding and self-paced knowledge checks on everyday devices.</span></div>
+                                    <div class="brief-row"><strong>Architecture:</strong> <span>Modular frontend state flow powering multi-step student onboarding, curated curriculum navigation, and an interactive quiz engine.</span></div>
+                                </div>
+                                <ul class="impact-list">
+                                    <li><span class="check-icon">✓</span><span>Guided onboarding flow reducing first-time learner drop-off.</span></li>
+                                    <li><span class="check-icon">✓</span><span>Instant self-assessment evaluation with real-time scoring feedback.</span></li>
+                                    <li><span class="check-icon">✓</span><span>Lightweight, responsive layout optimized for mobile bandwidth.</span></li>
+                                </ul>
+                                <div class="tag-cloud">
+                                    <span class="tech-tag">HTML5</span>
+                                    <span class="tech-tag">CSS3</span>
+                                    <span class="tech-tag">JavaScript (ES6+)</span>
+                                    <span class="tech-tag">Assessment Engine</span>
+                                    <span class="tech-tag">Replit Cloud</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <a href="https://furaha-skool.replit.app" target="_blank" rel="noopener noreferrer" class="btn-project-live">
+                                <span>Launch Live App ↗</span>
+                            </a>
+                            <button type="button" class="btn-project-arch" onclick="openCaseStudy('furaha')">
+                                <span>Inspect Architecture</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- CASE STUDY 2: M-Pesa Daraja Payment Engine -->
+                    <article class="project-card" data-category="fintech">
+                        <div>
+                            <div class="project-top">
+                                <div>
+                                    <span class="project-cat-tag">FinTech &amp; APIs</span>
+                                    <h3 class="project-title">M-Pesa Daraja API Payment Engine</h3>
+                                </div>
+                                <span class="live-indicator">API Architecture</span>
+                            </div>
+                            <div class="project-body">
+                                <p class="project-summary">
+                                    End-to-end Safaricom Daraja API integration architecture enabling Lipa Na M-Pesa Online (STK Push) checkouts, OAuth 2.0 credential lifecycle management, and asynchronous webhook reconciliation.
+                                </p>
+                                <div class="engineering-brief">
+                                    <div class="brief-row"><strong>Problem:</strong> <span>Web merchants lose conversions and face manual reconciliation errors without automated mobile-money prompts and verified callback logging.</span></div>
+                                    <div class="brief-row"><strong>Architecture:</strong> <span>Server-side OAuth2 token caching, Base64 timestamp password generation, STK Push initiation, and idempotent callback receipt verification.</span></div>
+                                </div>
+                                <ul class="impact-list">
+                                    <li><span class="check-icon">✓</span><span>Strict MSISDN normalization (`2547XXXXXXXX`) &amp; payload validation.</span></li>
+                                    <li><span class="check-icon">✓</span><span>Idempotent `CheckoutRequestID` tracking to prevent duplicate credits.</span></li>
+                                    <li><span class="check-icon">✓</span><span>Graceful handling of ResultCodes (`0` Success, `1032` Cancelled, `1` Funds).</span></li>
+                                </ul>
+                                <div class="tag-cloud">
+                                    <span class="tech-tag">Safaricom Daraja API</span>
+                                    <span class="tech-tag">OAuth 2.0</span>
+                                    <span class="tech-tag">STK Push</span>
+                                    <span class="tech-tag">REST Webhooks</span>
+                                    <span class="tech-tag">JSON State Machine</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <a href="#sandbox" class="btn-project-live">
+                                <span>Test Live Simulator ↓</span>
+                            </a>
+                            <button type="button" class="btn-project-arch" onclick="openCaseStudy('mpesa')">
+                                <span>Inspect Architecture</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- CASE STUDY 3: Shimmy Photography -->
+                    <article class="project-card" data-category="brand">
+                        <div>
+                            <div class="project-top">
+                                <div>
+                                    <span class="project-cat-tag">Web &amp; Brand Platforms</span>
+                                    <h3 class="project-title">Shimmy Photography &amp; Media Platform</h3>
+                                </div>
+                                <span class="live-indicator">● Live Production</span>
+                            </div>
+                            <div class="project-body">
+                                <p class="project-summary">
+                                    High-performance commercial portfolio and booking showcase engineered for an event photography and videography brand, balancing visual storytelling with rapid mobile load times.
+                                </p>
+                                <div class="engineering-brief">
+                                    <div class="brief-row"><strong>Problem:</strong> <span>Media-rich creative websites frequently suffer from slow mobile rendering and unclear service conversion paths for prospective event clients.</span></div>
+                                    <div class="brief-row"><strong>Architecture:</strong> <span>Responsive CSS Grid visual galleries, structured service-tier presentation, and automated edge deployment via Netlify.</span></div>
+                                </div>
+                                <ul class="impact-list">
+                                    <li><span class="check-icon">✓</span><span>Fluid mobile-first gallery layout across portrait &amp; desktop viewports.</span></li>
+                                    <li><span class="check-icon">✓</span><span>Clear service package hierarchy driving direct client inquiries.</span></li>
+                                    <li><span class="check-icon">✓</span><span>Continuous deployment pipeline hosted on Netlify global CDN.</span></li>
+                                </ul>
+                                <div class="tag-cloud">
+                                    <span class="tech-tag">Semantic HTML5</span>
+                                    <span class="tech-tag">Responsive CSS Grid</span>
+                                    <span class="tech-tag">JavaScript</span>
+                                    <span class="tech-tag">Core Web Vitals</span>
+                                    <span class="tech-tag">Netlify CI/CD</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <a href="https://shimmyphotography.netlify.app" target="_blank" rel="noopener noreferrer" class="btn-project-live">
+                                <span>Launch Live Site ↗</span>
+                            </a>
+                            <button type="button" class="btn-project-arch" onclick="openCaseStudy('shimmy')">
+                                <span>Inspect Architecture</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- CASE STUDY 4: Academic & Systems Engineering Lab -->
+                    <article class="project-card" data-category="edtech fintech">
+                        <div>
+                            <div class="project-top">
+                                <div>
+                                    <span class="project-cat-tag">Systems &amp; Security</span>
+                                    <h3 class="project-title">Academic &amp; Systems Engineering Lab</h3>
+                                </div>
+                                <span class="live-indicator">KCA University</span>
+                            </div>
+                            <div class="project-body">
+                                <p class="project-summary">
+                                    Applied software and systems implementations developed during university computing coursework—spanning cryptographic security workflows, discrete-event simulation, and knowledge management architectures.
+                                </p>
+                                <div class="engineering-brief">
+                                    <div class="brief-row"><strong>Focus:</strong> <span>Translating theoretical computer science principles—encryption, hash integrity, network subnetting, and system modeling—into working code.</span></div>
+                                    <div class="brief-row"><strong>Scope:</strong> <span>Information Systems Security &amp; Cryptography, Blockchain ledger concepts, Simulation &amp; Modeling, and Enterprise Knowledge Systems.</span></div>
+                                </div>
+                                <ul class="impact-list">
+                                    <li><span class="check-icon">✓</span><span>Applied hashing, symmetric/asymmetric encryption, and auth threat modeling.</span></li>
+                                    <li><span class="check-icon">✓</span><span>Analytical system simulation models for queue and resource optimization.</span></li>
+                                    <li><span class="check-icon">✓</span><span>Structured information retrieval and organizational knowledge workflows.</span></li>
+                                </ul>
+                                <div class="tag-cloud">
+                                    <span class="tech-tag">Cryptography</span>
+                                    <span class="tech-tag">InfoSec</span>
+                                    <span class="tech-tag">Blockchain Concepts</span>
+                                    <span class="tech-tag">Simulation &amp; Modeling</span>
+                                    <span class="tech-tag">Knowledge Systems</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button type="button" class="btn-project-live" style="border:none; cursor:pointer;" onclick="openCaseStudy('systems')">
+                                <span>Explore Lab Modules</span>
+                            </button>
+                            <button type="button" class="btn-project-arch" onclick="openCaseStudy('systems')">
+                                <span>Inspect Architecture</span>
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. INTERACTIVE M-PESA DARAJA API & SECURITY SANDBOX -->
+        <section id="sandbox" class="section section-alt">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <span class="eyebrow">02 / Live Technical Proof</span>
+                        <h2 class="section-title">Interactive M-Pesa Daraja API &amp; Security Sandbox</h2>
+                        <p class="section-desc">
+                            Built for technical interviewers and engineering leads: configure a simulated Lipa Na M-Pesa STK Push checkout, step through the OAuth2-to-webhook pipeline, and inspect live JSON payloads.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="sandbox-grid">
+                    <!-- Left: Configurable STK Push Simulator -->
+                    <div class="panel-card panel-pad">
+                        <div class="panel-header-bar">
+                            <div>
+                                <h3 style="font-size: 1.05rem; font-weight: 700;">STK Push Checkout Trigger</h3>
+                                <p style="font-size: 0.78rem; color: var(--text-muted);">Safaricom Daraja Express Sandbox</p>
+                            </div>
+                            <span id="sim-status-pill" class="sim-state-pill">READY</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-phone">Customer Safaricom MSISDN (`2547...` or `2541...`)</label>
+                            <div class="input-prefix-wrap">
+                                <span class="input-prefix">+254</span>
+                                <input id="sim-phone" class="form-control mono" type="tel" maxlength="9" value="712345678" placeholder="712345678">
+                            </div>
+                            <div id="sim-phone-err" style="display:none; color: var(--accent-rose); font-size: 0.75rem; margin-top: 0.3rem;">
+                                Please enter a valid 9-digit Safaricom subscriber number (starts with 7 or 1).
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="sim-amount">Amount (KES)</label>
+                                <input id="sim-amount" class="form-control mono" type="number" min="1" max="150000" value="1500">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="sim-ref">Account Reference</label>
+                                <input id="sim-ref" class="form-control mono" type="text" maxlength="18" value="FURAHA-TERM1">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Simulated Callback Outcome</label>
+                            <div class="outcome-grid">
+                                <button type="button" class="outcome-btn active" data-outcome="success">Success (0)</button>
+                                <button type="button" class="outcome-btn" data-outcome="cancelled">Cancelled (1032)</button>
+                                <button type="button" class="outcome-btn" data-outcome="insufficient">Low Funds (1)</button>
+                            </div>
+                        </div>
+
+                        <button id="run-stk-btn" type="button" class="btn-cta-primary" style="width: 100%; justify-content: center;">
+                            <span>Execute STK Push Flow →</span>
+                        </button>
+
+                        <!-- 4-Step Execution Trace -->
+                        <div class="trace-list" aria-label="Execution Pipeline Trace">
+                            <div id="trace-1" class="trace-step">
+                                <span>1. OAuth Bearer Token Fetch</span>
+                                <span class="trace-badge">IDLE</span>
+                            </div>
+                            <div id="trace-2" class="trace-step">
+                                <span>2. Password &amp; Timestamp Generation</span>
+                                <span class="trace-badge">IDLE</span>
+                            </div>
+                            <div id="trace-3" class="trace-step">
+                                <span>3. STK Push Request POST</span>
+                                <span class="trace-badge">IDLE</span>
+                            </div>
+                            <div id="trace-4" class="trace-step">
+                                <span>4. Safaricom Callback Webhook</span>
+                                <span class="trace-badge">IDLE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live JSON Request/Response & Security Notes Inspector -->
+                    <div class="panel-card">
+                        <div class="inspector-tabs">
+                            <div class="tab-btn-group">
+                                <button type="button" class="code-tab active" data-tab="request">STK Request JSON</button>
+                                <button type="button" class="code-tab" data-tab="callback">Webhook Callback JSON</button>
+                                <button type="button" class="code-tab" data-tab="notes">Security &amp; Replay Notes</button>
+                            </div>
+                            <button type="button" class="icon-btn" onclick="copySandboxCode()">
+                                Copy JSON
+                            </button>
+                        </div>
+
+                        <div class="code-viewport">
+                            <pre id="sandbox-code-output"></pre>
+                        </div>
+
+                        <div class="inspector-footer">
+                            <span>Idempotent key: <strong class="mono" style="color: var(--accent-emerald);">CheckoutRequestID</strong></span>
+                            <span class="mono">TLS 1.3 • Base64 SHA-256 Auth</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. TECHNICAL COMPETENCIES & ENGINEERING MATRIX -->
+        <section id="skills" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <span class="eyebrow">03 / Technical Matrix</span>
+                        <h2 class="section-title">Technical Competencies &amp; Engineering Stack</h2>
+                        <p class="section-desc">
+                            A structured overview of the frontend, backend integration, security, and deployment capabilities I bring to engineering teams.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="skills-grid">
+                    <!-- Pillar 1 -->
+                    <div class="skill-pillar">
+                        <div class="pillar-head">
+                            <div class="pillar-icon">FE</div>
+                            <div>
+                                <h3 class="pillar-title">Frontend Engineering</h3>
+                                <p class="pillar-desc">Accessible, responsive, zero-bloat user interfaces</p>
+                            </div>
+                        </div>
+                        <p class="pillar-desc">
+                            Building clean semantic markup, fluid CSS Grid/Flexbox layouts, and modular Vanilla JavaScript applications engineered for fast load speeds and mobile responsiveness.
+                        </p>
+                        <div class="skill-chip-list">
+                            <span class="skill-chip">Semantic HTML5</span>
+                            <span class="skill-chip">Modern CSS3 (Grid / Flexbox)</span>
+                            <span class="skill-chip">Vanilla JavaScript (ES6+)</span>
+                            <span class="skill-chip">Interactive UI Architecture</span>
+                            <span class="skill-chip">WCAG Accessibility</span>
+                            <span class="skill-chip">Core Web Vitals</span>
+                        </div>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="skill-pillar">
+                        <div class="pillar-head">
+                            <div class="pillar-icon">API</div>
+                            <div>
+                                <h3 class="pillar-title">Backend &amp; API Integrations</h3>
+                                <p class="pillar-desc">Payment gateways, webhooks &amp; data state flows</p>
+                            </div>
+                        </div>
+                        <p class="pillar-desc">
+                            Designing reliable client-server integrations, RESTful API workflows, and asynchronous webhook listeners for financial transactions and real-time application state.
+                        </p>
+                        <div class="skill-chip-list">
+                            <span class="skill-chip">RESTful API Design</span>
+                            <span class="skill-chip">Safaricom Daraja / M-Pesa API</span>
+                            <span class="skill-chip">OAuth 2.0 &amp; Webhook Handling</span>
+                            <span class="skill-chip">JSON Data Modeling</span>
+                            <span class="skill-chip">Payment State Machines</span>
+                        </div>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div class="skill-pillar">
+                        <div class="pillar-head">
+                            <div class="pillar-icon">SEC</div>
+                            <div>
+                                <h3 class="pillar-title">Security, Systems &amp; Foundations</h3>
+                                <p class="pillar-desc">Defensive engineering &amp; analytical modeling</p>
+                            </div>
+                        </div>
+                        <p class="pillar-desc">
+                            Applying information systems security principles, cryptographic hashing, replay protection, and structured system modeling across software lifecycles.
+                        </p>
+                        <div class="skill-chip-list">
+                            <span class="skill-chip">Information Systems Security</span>
+                            <span class="skill-chip">Applied Cryptography Principles</span>
+                            <span class="skill-chip">Simulation &amp; Modeling</span>
+                            <span class="skill-chip">Knowledge Management</span>
+                            <span class="skill-chip">Blockchain Concepts</span>
+                        </div>
+                    </div>
+
+                    <!-- Pillar 4 -->
+                    <div class="skill-pillar">
+                        <div class="pillar-head">
+                            <div class="pillar-icon">OPS</div>
+                            <div>
+                                <h3 class="pillar-title">DevOps, Cloud &amp; Tooling</h3>
+                                <p class="pillar-desc">Version control, CI/CD &amp; performance diagnostics</p>
+                            </div>
+                        </div>
+                        <p class="pillar-desc">
+                            Shipping continuously with Git/GitHub workflows, cloud deployment platforms, strict secret hygiene, and browser-level performance auditing.
+                        </p>
+                        <div class="skill-chip-list">
+                            <span class="skill-chip">Git &amp; GitHub Workflows</span>
+                            <span class="skill-chip">Netlify &amp; Replit Deployment</span>
+                            <span class="skill-chip">Environment Variable Security</span>
+                            <span class="skill-chip">Browser DevTools</span>
+                            <span class="skill-chip">Performance Auditing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. EXPERIENCE, ORGANIZATIONAL AFFILIATIONS & EDUCATION TIMELINE -->
+        <section id="experience" class="section section-alt">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <span class="eyebrow">04 / Track Record &amp; Credentials</span>
+                        <h2 class="section-title">Experience, Affiliations &amp; Education</h2>
+                        <p class="section-desc">
+                            Combining hands-on independent software delivery with organizational exposure and formal computing education in Nairobi.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="career-grid">
+                    <!-- Left: Experience & Organizational Affiliations -->
+                    <div class="timeline-stack">
+                        <div class="timeline-card">
+                            <div class="timeline-meta">
+                                <span class="timeline-badge">Software Delivery • Present</span>
+                                <span class="timeline-loc">Nairobi, Kenya</span>
+                            </div>
+                            <h3 class="timeline-role">Independent Full-Stack Web Developer &amp; Digital Builder</h3>
+                            <p class="timeline-desc">
+                                Architecting, developing, and deploying end-to-end web solutions—including the <strong>Furaha Skool</strong> online learning platform, <strong>Shimmy Photography</strong> brand showcase, and <strong>Safaricom M-Pesa Daraja API</strong> payment integration workflows. Responsible for responsive UI engineering, API integration, security validation, and cloud deployment.
+                            </p>
+                        </div>
+
+                        <div class="timeline-card" style="border-left-color: var(--accent-cyan);">
+                            <div class="timeline-meta">
+                                <span class="timeline-badge" style="color: var(--accent-cyan);">Past Organizational Affiliation</span>
+                                <span class="timeline-loc">Financial Sector Exposure</span>
+                            </div>
+                            <h3 class="timeline-role">KCB Group Affiliation</h3>
+                            <p class="timeline-desc">
+                                Gained firsthand exposure to enterprise financial operations, institutional governance, customer-centric service delivery, and high-reliability digital banking environments.
+                            </p>
+                        </div>
+
+                        <div class="timeline-card" style="border-left-color: var(--accent-cyan);">
+                            <div class="timeline-meta">
+                                <span class="timeline-badge" style="color: var(--accent-cyan);">Past Organizational Affiliation</span>
+                                <span class="timeline-loc">Operations &amp; Execution</span>
+                            </div>
+                            <h3 class="timeline-role">Elite Co. Affiliation</h3>
+                            <p class="timeline-desc">
+                                Operated within structured team workflows, strengthening cross-functional communication, accountability, and timely project execution.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Academic Foundation -->
+                    <div class="timeline-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div class="timeline-meta">
+                                <span class="timeline-badge">Higher Education</span>
+                                <span class="timeline-loc">Nairobi, Kenya</span>
+                            </div>
+                            <h3 class="timeline-role">BSc / University Coursework in Information Technology &amp; Computing</h3>
+                            <p style="font-weight: 700; color: var(--accent-emerald); font-size: 0.92rem; margin-bottom: 0.65rem;">
+                                KCA University
+                            </p>
+                            <p class="timeline-desc">
+                                Comprehensive computing curriculum bridging full-stack web engineering with information security, analytical modeling, and enterprise systems architecture.
+                            </p>
+
+                            <div style="margin-top: 1.15rem;">
+                                <div class="mono" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted);">
+                                    Core Technical Coursework
+                                </div>
+                                <div class="coursework-grid">
+                                    <div class="course-item">Web Programming (HTML, CSS, JS)</div>
+                                    <div class="course-item">Info Systems Security &amp; Cryptography</div>
+                                    <div class="course-item">Blockchain Technology</div>
+                                    <div class="course-item">Simulation &amp; Modeling</div>
+                                    <div class="course-item" style="grid-column: 1 / -1;">Knowledge Management &amp; Enterprise Systems</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.35rem; padding: 0.85rem 1rem; border-radius: var(--radius-sm); background: var(--accent-emerald-soft); border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.8rem; color: var(--text-primary);">
+                            <strong>Interview Readiness:</strong> Available for live coding assessments, architecture walkthroughs, and immediate onboarding.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. RECRUITER & HIRING MANAGER CONTACT HUB -->
+        <section id="contact" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <span class="eyebrow">05 / Direct Hiring &amp; Outreach</span>
+                        <h2 class="section-title">Recruiter &amp; Hiring Manager Contact Hub</h2>
+                        <p class="section-desc">
+                            Looking for a dependable Full-Stack Web Developer or Systems-Oriented Software Engineer? Reach out directly via email or use the composer below to send a structured interview invite.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="contact-grid">
+                    <!-- Left: Direct Contact Channels -->
+                    <div class="contact-card">
+                        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Direct Contact &amp; Quick Actions</h3>
+
+                        <div class="direct-channel">
+                            <div>
+                                <div class="channel-label">Primary Email (Fastest Response)</div>
+                                <div class="channel-value">Saboke001@gmail.com</div>
+                            </div>
+                            <div style="display: flex; gap: 0.4rem; flex-shrink: 0;">
+                                <button type="button" class="icon-btn" onclick="copyToClipboard('Saboke001@gmail.com', 'Copied Saboke001@gmail.com!')">
+                                    Copy
+                                </button>
+                                <a href="mailto:Saboke001@gmail.com?subject=Opportunity%20for%20Collins%20Saboke" class="btn-primary-sm">
+                                    Email
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="direct-channel">
+                            <div>
+                                <div class="channel-label">Base Location &amp; Timezone</div>
+                                <div class="channel-value" style="font-family: var(--font-sans);">Nairobi, Kenya (EAT / UTC+3)</div>
+                            </div>
+                            <span class="role-pill">Remote / Hybrid / On-site</span>
+                        </div>
+
+                        <div class="direct-channel">
+                            <div>
+                                <div class="channel-label">Live Production Deployments</div>
+                                <div class="channel-value" style="font-size: 0.8rem;">
+                                    <a href="https://furaha-skool.replit.app" target="_blank" rel="noopener noreferrer" style="color: var(--accent-emerald);">furaha-skool.replit.app</a> •
+                                    <a href="https://shimmyphotography.netlify.app" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan);">shimmyphotography.netlify.app</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.15rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); display: flex; flex-wrap: wrap; gap: 0.6rem;">
+                            <button type="button" class="btn-cta-secondary" style="flex: 1; justify-content: center;" onclick="copyRecruiterSummary()">
+                                Copy Recruiter Summary
+                            </button>
+                            <button type="button" class="btn-cta-secondary" style="flex: 1; justify-content: center;" onclick="window.print()">
+                                Save PDF Resume
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Interview / Role Inquiry Composer -->
+                    <div class="contact-card">
+                        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.35rem;">Interview / Role Inquiry Composer</h3>
+                        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.15rem;">
+                            Select the opportunity type to pre-fill an email directly to <strong style="color: var(--accent-emerald);">Saboke001@gmail.com</strong> or copy a formatted outreach message.
+                        </p>
+
+                        <form id="recruiter-form">
+                            <div class="form-group">
+                                <label class="form-label">Opportunity Type</label>
+                                <div class="opp-pill-grid">
+                                    <button type="button" class="opp-pill active" data-opp="Full-Time Software / Web Role">Full-Time Role</button>
+                                    <button type="button" class="opp-pill" data-opp="Contract / Freelance Build">Contract / Freelance Build</button>
+                                    <button type="button" class="opp-pill" data-opp="Internship / Graduate Engineering Role">Internship / Graduate Role</button>
+                                    <button type="button" class="opp-pill" data-opp="Technical Interview Invitation">Technical Interview</button>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                                <div class="form-group">
+                                    <label class="form-label" for="recruiter-name">Your Name</label>
+                                    <input id="recruiter-name" class="form-control" type="text" placeholder="e.g., Sarah Kamau" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="recruiter-company">Company / Team</label>
+                                    <input id="recruiter-company" class="form-control" type="text" placeholder="e.g., FinTech Africa Ltd" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="recruiter-notes">Role Details, Tech Stack, or Proposed Interview Time</label>
+                                <textarea id="recruiter-notes" class="form-control" rows="3" placeholder="Share role expectations, team focus, or preferred interview slots..."></textarea>
+                            </div>
+
+                            <div class="composer-actions">
+                                <button type="submit" class="btn-cta-primary" style="justify-content: center;">
+                                    <span>Open Email to Saboke001@gmail.com ↗</span>
+                                </button>
+                                <button type="button" class="btn-cta-secondary" style="justify-content: center;" onclick="copyOutreachDraft()">
+                                    <span>Copy Outreach Draft</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER (NO LINKEDIN LINKS) -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div>
+                <strong style="color: var(--text-primary);">Collins Saboke</strong> — Full-Stack Web Developer &amp; Systems-Oriented Software Engineer • Nairobi, Kenya
+            </div>
+            <div class="footer-links">
+                <a href="mailto:Saboke001@gmail.com">Saboke001@gmail.com</a>
+                <a href="https://furaha-skool.replit.app" target="_blank" rel="noopener noreferrer">Furaha Skool</a>
+                <a href="https://shimmyphotography.netlify.app" target="_blank" rel="noopener noreferrer">Shimmy Photography</a>
+                <a href="#overview">Back to Top ↑</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- DEEP-DIVE CASE STUDY ARCHITECTURE MODAL -->
+    <div id="case-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-box">
+            <div class="modal-top">
+                <div>
+                    <span id="modal-eyebrow" class="eyebrow">Case Study</span>
+                    <h3 id="modal-title" style="font-size: 1.35rem; font-weight: 800;">Project Title</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closeCaseStudy()" aria-label="Close Modal">✕</button>
+            </div>
+
+            <div class="modal-tabs" role="tablist">
+                <button type="button" class="modal-tab-btn active" data-mtab="problem">Problem &amp; Context</button>
+                <button type="button" class="modal-tab-btn" data-mtab="architecture">System Architecture &amp; Data Flow</button>
+                <button type="button" class="modal-tab-btn" data-mtab="security">Security &amp; Performance</button>
+                <button type="button" class="modal-tab-btn" data-mtab="takeaways">Key Takeaways</button>
+            </div>
+
+            <div id="modal-body" class="modal-content-area"></div>
+
+            <div class="modal-foot">
+                <a id="modal-live-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary-sm">
+                    Open Live Deployment ↗
+                </a>
+                <button type="button" class="icon-btn" onclick="closeCaseStudy()">Close Window</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           1. THEME TOGGLE (DARK / LIGHT MODE)
+           ========================================================================== */
+        const htmlEl = document.documentElement;
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeLabel = document.getElementById('theme-label');
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = htmlEl.getAttribute('data-theme') === 'dark';
+            const nextTheme = isDark ? 'light' : 'dark';
+            htmlEl.setAttribute('data-theme', nextTheme);
+            themeIcon.textContent = nextTheme === 'dark' ? '☀' : '☾';
+            themeLabel.textContent = nextTheme === 'dark' ? 'Light' : 'Dark';
+        });
+
+        /* ==========================================================================
+           2. MOBILE NAVIGATION & SCROLL-SPY ACTIVE LINKS
+           ========================================================================== */
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileDrawer = document.getElementById('mobile-drawer');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileDrawer.classList.toggle('open');
+        });
+
+        document.querySelectorAll('.drawer-link').forEach(link => {
+            link.addEventListener('click', () => mobileDrawer.classList.remove('open'));
+        });
+
+        const sections = document.querySelectorAll('main section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let currentId = 'overview';
+            sections.forEach(sec => {
+                const top = sec.offsetTop - 130;
+                if (window.scrollY >= top) {
+                    currentId = sec.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+            });
+        }, { passive: true });
+
+        /* ==========================================================================
+           3. CLIPBOARD & TOAST NOTIFICATION ENGINE
+           ========================================================================== */
+        function showToast(message) {
+            const stack = document.getElementById('toast-stack');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = '✓ ' + message;
+            stack.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.25s ease';
+                setTimeout(() => toast.remove(), 260);
+            }, 3000);
+        }
+
+        function copyToClipboard(text, message) {
+            const area = document.createElement('textarea');
+            area.value = text;
+            area.style.position = 'fixed';
+            area.style.opacity = '0';
+            document.body.appendChild(area);
+            area.select();
+            try {
+                document.execCommand('copy');
+                showToast(message || 'Copied to clipboard!');
+            } catch (e) {
+                showToast('Unable to copy automatically.');
+            }
+            document.body.removeChild(area);
+        }
+
+        function copyRecruiterSummary() {
+            const summary = [
+                'Collins Saboke — Full-Stack Web Developer & Systems-Oriented Software Engineer',
+                'Location: Nairobi, Kenya (EAT / UTC+3) | Open to Remote, Hybrid & On-site Roles',
+                'Email: Saboke001@gmail.com',
+                'Live Projects:',
+                '• Furaha Skool (EdTech Learning & Assessment Platform): https://furaha-skool.replit.app',
+                '• Shimmy Photography (Responsive Portfolio & Booking Platform): https://shimmyphotography.netlify.app',
+                '• M-Pesa Safaricom Daraja API Integration (STK Push, OAuth2 & Webhook Reconciliation)',
+                'Education & Background: KCA University (IT & Computing Coursework); Past Affiliations with KCB Group & Elite Co.'
+            ].join('\n');
+            copyToClipboard(summary, 'Candidate executive summary copied!');
+        }
+
+        /* ==========================================================================
+           4. PROJECT CATEGORY FILTERING
+           ========================================================================== */
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+
+                projectCards.forEach(card => {
+                    const cats = card.dataset.category || '';
+                    if (filter === 'all' || cats.includes(filter)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        /* ==========================================================================
+           5. DEEP-DIVE CASE STUDY ARCHITECTURE MODAL
+           ========================================================================== */
+        const caseStudiesData = {
+            furaha: {
+                eyebrow: 'Full-Stack & EdTech Case Study',
+                title: 'Furaha Skool — Online Learning & Interactive Self-Assessment Platform',
+                liveUrl: 'https://furaha-skool.replit.app',
+                liveLabel: 'Open Furaha Skool Live ↗',
+                tabs: {
+                    problem: `
+                        <p style="margin-bottom:0.85rem;"><strong>Context & Challenge:</strong> Students preparing for assessments often struggle with fragmented study materials and heavy platforms that perform poorly on mobile data connections.</p>
+                        <p><strong>Objective:</strong> Engineer an intuitive, responsive EdTech web platform that guides learners smoothly from initial onboarding into structured educational resources and interactive self-assessment modules.</p>
+                    `,
+                    architecture: `
+                        <p style="margin-bottom:0.85rem;"><strong>Frontend & State Architecture:</strong></p>
+                        <ul style="padding-left:1.2rem; display:flex; flex-direction:column; gap:0.5rem;">
+                            <li><strong>Guided Onboarding Flow:</strong> Step-by-step learner entry minimizing cognitive overload and directing students straight to relevant modules.</li>
+                            <li><strong>Interactive Self-Assessment Engine:</strong> Client-side quiz state evaluation providing immediate score calculation and diagnostic feedback.</li>
+                            <li><strong>Modular Content Views:</strong> Clean separation between learning resources, assessment prompts, and progress summaries.</li>
+                        </ul>
+                    `,
+                    security: `
+                        <ul style="padding-left:1.2rem; display:flex; flex-direction:column; gap:0.55rem;">
+                            <li><strong>Input Sanitization:</strong> Safe DOM rendering practices preventing script injection across user-entered onboarding fields.</li>
+                            <li><strong>Zero-Bloat Asset Delivery:</strong> Lightweight HTML/CSS/JS footprint ensuring fast First Contentful Paint even on 3G/4G mobile networks.</li>
+                            <li><strong>Cloud Hosting:</strong> Deployed via Replit with HTTPS transport encryption.</li>
+                        </ul>
+                    `,
+                    takeaways: `
+                        <p>Building Furaha Skool reinforced how structured UX onboarding and instant feedback loops dramatically improve learner engagement—and why lightweight frontend architecture is critical for accessibility across East African mobile networks.</p>
+                    `
+                }
+            },
+            mpesa: {
+                eyebrow: 'FinTech & API Integration Architecture',
+                title: 'M-Pesa Safaricom Daraja API Payment & Reconciliation Engine',
+                liveUrl: '#sandbox',
+                liveLabel: 'Try Live STK Simulator ↓',
+                tabs: {
+                    problem: `
+                        <p style="margin-bottom:0.85rem;"><strong>Context & Challenge:</strong> Manual mobile money verification (asking users to copy-paste transaction SMS codes) causes checkout abandonment, human verification delays, and accounting discrepancies.</p>
+                        <p><strong>Objective:</strong> Implement an automated Lipa Na M-Pesa Online (STK Push) checkout pipeline that triggers a PIN prompt directly on the customer's handset and reconciles payment confirmation via webhook callbacks.</p>
+                    `,
+                    architecture: `
+                        <p style="margin-bottom:0.85rem;"><strong>4-Stage Transaction Pipeline:</strong></p>
+                        <ol style="padding-left:1.2rem; display:flex; flex-direction:column; gap:0.5rem;">
+                            <li><strong>OAuth 2.0 Token Lifecycle:</strong> Authenticates consumer key/secret against Safaricom's OAuth endpoint and caches the short-lived Bearer token.</li>
+                            <li><strong>Dynamic Credential Encoding:</strong> Computes Base64(BusinessShortCode + Passkey + YYYYMMDDHHmmss) per request.</li>
+                            <li><strong>STK Push Initiation:</strong> Dispatches normalized MSISDN (<code>2547XXXXXXXX</code>), amount, and callback URL, storing the returned <code>CheckoutRequestID</code> in a <code>PENDING</code> state.</li>
+                            <li><strong>Asynchronous Webhook Callback:</strong> Parses <code>Body.stkCallback</code>, checks <code>ResultCode === 0</code>, extracts <code>MpesaReceiptNumber</code>, and transitions order state to <code>PAID</code>.</li>
+                        </ol>
+                    `,
+                    security: `
+                        <ul style="padding-left:1.2rem; display:flex; flex-direction:column; gap:0.55rem;">
+                            <li><strong>Idempotency & Replay Protection:</strong> Enforces unique database constraints on <code>CheckoutRequestID</code> and <code>MpesaReceiptNumber</code> so duplicate webhook deliveries cannot double-credit accounts.</li>
+                            <li><strong>Amount & Shortcode Verification:</strong> Cross-checks callback metadata amount against the original server-side invoice amount before fulfillment.</li>
+                            <li><strong>Secret Isolation:</strong> Consumer keys, secrets, and Lipa Na M-Pesa passkeys remain strictly in server environment variables.</li>
+                        </ul>
+                    `,
+                    takeaways: `
+                        <p>Payment integrations require defensive state-machine thinking: networks drop, users cancel PIN prompts (<code>ResultCode 1032</code>), and callbacks can arrive out of order. Designing for idempotency and clear user status feedback makes checkout systems trustworthy.</p>
+                    `
+                }
+            },
+            shimmy: {
+                eyebrow: 'Web & Brand Platform Case Study',
+                title: 'Shimmy Photography & Media Booking Showcase',
+                liveUrl: 'https://shimmyphotography.netlify.app',
+                liveLabel: 'Open Shimmy Photography Live ↗',
+                tabs: {
+                    problem: `
+                        <p style="margin-bottom:0.85rem;"><strong>Context & Challenge:</strong> Creative photography and videography studios rely on visual credibility to win event bookings, yet media-heavy portfolios often suffer from sluggish load times and unclear service tiers on mobile phones.</p>
+                        <p><strong>Objective:</strong> Design and ship a responsive commercial web presence that showcases visual work crisply while guiding prospective clients toward package inquiries.</p>
+                    `,
+                    architecture: `
+                        <ul style="padding-left:1.2rem; display:flex; flex-direction:column; gap:0.55rem;">
+                            <li><strong>Responsive Visual Grid:</strong> Adaptive multi-breakpoint gallery architecture preserving aspect ratios across mobile portrait, tablet, and desktop screens.</li>
+                            <li><strong>Conversion-Oriented Service Tiers:</strong> Structured breakdown of event photography, studio shoots, and videography offerings.</li>
+                            <li><strong>Edge CDN Hosting:</strong> Continuous deployment pipeline hosted on Netlify for low-latency global asset delivery.</li>
+                        </ul>
+                    `,
+                    security: `
+                        <ul style="padding-left:1.2rem; display:flex; flex-direction:column; gap:0.55rem;">
+                            <li><strong>Performance Optimization:</strong> Streamlined DOM structure and responsive image scaling to protect Core Web Vitals.</li>
+                            <li><strong>HTTPS & CDN Caching:</strong> Automatic SSL termination and immutable asset caching via Netlify edge nodes.</li>
+                        </ul>
+                    `,
+                    takeaways: `
+                        <p>Collaborating on a client-facing creative platform sharpened my ability to align visual hierarchy, responsive performance, and clear business calls-to-action.</p>
+                    `
+                }
+            },
+            systems: {
+                eyebrow: 'Academic & Systems Engineering Lab',
+                title: 'Applied Computing, Security & Modeling Implementations (KCA University)',
+                liveUrl: '#experience',
+                liveLabel: 'View Academic Background ↓',
+                tabs: {
+                    problem: `
+                        <p>Alongside commercial web development, my coursework at KCA University focused on solving foundational computing challenges in information security, distributed consensus, analytical modeling, and organizational knowledge systems.</p>
+                    `,
+                    architecture: `
+                        <ul style="padding-left:1.2rem; display:flex; flex-direction:column; gap:0.55rem;">
+                            <li><strong>Information Systems Security &amp; Cryptography:</strong> Practical implementations of cryptographic hashing, symmetric/asymmetric key concepts, and authentication security controls.</li>
+                            <li><strong>Simulation &amp; Modeling:</strong> Discrete-event and quantitative models analyzing system throughput, queue behavior, and resource allocation.</li>
+                            <li><strong>Blockchain &amp; Knowledge Management:</strong> Exploring immutable ledger verification structures alongside structured enterprise knowledge repositories.</li>
+                        </ul>
+                    `,
+                    security: `
+                        <p>These systems modules directly inform how I build web applications—treating input validation, token expiration, cryptographic integrity, and auditability as first-class architectural requirements rather than afterthoughts.</p>
+                    `,
+                    takeaways: `
+                        <p>Combining formal computer science fundamentals with practical full-stack web engineering enables me to reason clearly about both user experience and underlying system reliability.</p>
+                    `
+                }
+            }
+        };
+
+        let activeCaseKey = 'furaha';
+        let activeModalTab = 'problem';
+
+        function openCaseStudy(key) {
+            activeCaseKey = key;
+            activeModalTab = 'problem';
+            const data = caseStudiesData[key];
+            if (!data) return;
+
+            document.getElementById('modal-eyebrow').textContent = data.eyebrow;
+            document.getElementById('modal-title').textContent = data.title;
+
+            const liveLink = document.getElementById('modal-live-link');
+            liveLink.textContent = data.liveLabel;
+            liveLink.href = data.liveUrl;
+            if (data.liveUrl.startsWith('#')) {
+                liveLink.removeAttribute('target');
+                liveLink.onclick = () => closeCaseStudy();
+            } else {
+                liveLink.setAttribute('target', '_blank');
+                liveLink.onclick = null;
+            }
+
+            renderModalTab();
+            document.getElementById('case-modal').classList.add('open');
+        }
+
+        function renderModalTab() {
+            const data = caseStudiesData[activeCaseKey];
+            document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mtab === activeModalTab);
+            });
+            document.getElementById('modal-body').innerHTML = data.tabs[activeModalTab];
+        }
+
+        document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                activeModalTab = btn.dataset.mtab;
+                renderModalTab();
+            });
+        });
+
+        function closeCaseStudy() {
+            document.getElementById('case-modal').classList.remove('open');
+        }
+
+        document.getElementById('case-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'case-modal') closeCaseStudy();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeCaseStudy();
+        });
+
+        /* ==========================================================================
+           6. INTERACTIVE M-PESA DARAJA API & SECURITY SANDBOX
+           ========================================================================== */
+        let simOutcome = 'success';
+        let activeSandboxTab = 'request';
+        let simContext = {
+            msisdn: '254712345678',
+            amount: 1500,
+            reference: 'FURAHA-TERM1',
+            timestamp: '20261125115200',
+            checkoutId: 'ws_CO_251120261152008419',
+            receipt: 'UKP94M2X7Q',
+            outcome: 'success'
+        };
+
+        document.querySelectorAll('.outcome-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                simOutcome = btn.dataset.outcome;
+                simContext.outcome = simOutcome;
+                renderSandboxCode();
+            });
+        });
+
+        document.querySelectorAll('.code-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                activeSandboxTab = tab.dataset.tab;
+                renderSandboxCode();
+            });
+        });
+
+        function getSandboxPlainText() {
+            const c = simContext;
+            if (activeSandboxTab === 'request') {
+                return JSON.stringify({
+                    _endpoint: "POST https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
+                    _headers: {
+                        Authorization: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.sandbox_oauth_token",
+                        "Content-Type": "application/json"
+                    },
+                    payload: {
+                        BusinessShortCode: "174379",
+                        Password: "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjYxMTI1MTE1MjAw",
+                        Timestamp: c.timestamp,
+                        TransactionType: "CustomerPayBillOnline",
+                        Amount: Number(c.amount),
+                        PartyA: c.msisdn,
+                        PartyB: "174379",
+                        PhoneNumber: c.msisdn,
+                        CallBackURL: "https://api.collinssaboke.dev/v1/payments/mpesa/callback",
+                        AccountReference: c.reference,
+                        TransactionDesc: "Web Platform Checkout"
+                    }
+                }, null, 2);
+            }
+
+            if (activeSandboxTab === 'callback') {
+                if (c.outcome === 'success') {
+                    return JSON.stringify({
+                        Body: {
+                            stkCallback: {
+                                MerchantRequestID: "29115-34620561-1",
+                                CheckoutRequestID: c.checkoutId,
+                                ResultCode: 0,
+                                ResultDesc: "The service request is processed successfully.",
+                                CallbackMetadata: {
+                                    Item: [
+                                        { Name: "Amount", Value: Number(c.amount) },
+                                        { Name: "MpesaReceiptNumber", Value: c.receipt },
+                                        { Name: "TransactionDate", Value: Number(c.timestamp) },
+                                        { Name: "PhoneNumber", Value: Number(c.msisdn) }
+                                    ]
+                                }
+                            }
+                        }
+                    }, null, 2);
+                } else if (c.outcome === 'cancelled') {
+                    return JSON.stringify({
+                        Body: {
+                            stkCallback: {
+                                MerchantRequestID: "29115-34620561-1",
+                                CheckoutRequestID: c.checkoutId,
+                                ResultCode: 1032,
+                                ResultDesc: "Request cancelled by user"
+                            }
+                        }
+                    }, null, 2);
+                } else {
+                    return JSON.stringify({
+                        Body: {
+                            stkCallback: {
+                                MerchantRequestID: "29115-34620561-1",
+                                CheckoutRequestID: c.checkoutId,
+                                ResultCode: 1,
+                                ResultDesc: "The balance is insufficient for the transaction."
+                            }
+                        }
+                    }, null, 2);
+                }
+            }
+
+            return [
+                "// ARCHITECTURAL & SECURITY NOTES — M-PESA DARAJA INTEGRATION",
+                "// Engineered by Collins Saboke (Saboke001@gmail.com)",
+                "",
+                "1. MSISDN Input Normalization & Validation:",
+                "   - Strips spaces/hyphens and converts local '07XXXXXXXX' or '+2547XXXXXXXX'",
+                "     formats into strict Safaricom '2547XXXXXXXX' (or '2541XXXXXXXX') strings.",
+                "",
+                "2. OAuth2 Token Caching & Credential Isolation:",
+                "   - Consumer Key, Consumer Secret, and Passkey live strictly on the server.",
+                "   - OAuth access tokens (~3599s TTL) are cached in memory/Redis with early",
+                "     refresh to avoid rate-limiting on high-concurrency checkouts.",
+                "",
+                "3. Webhook Idempotency & Replay Protection:",
+                "   - CheckoutRequestID and MpesaReceiptNumber are indexed with UNIQUE constraints.",
+                "   - If Safaricom retries a callback due to network latency, the handler returns",
+                "     HTTP 200 OK immediately without re-triggering order fulfillment.",
+                "",
+                "4. Server-Side Invoice Reconciliation:",
+                "   - Before marking an order PAID, CallbackMetadata.Amount is verified against",
+                "     the stored pending invoice total to prevent amount-tampering edge cases."
+            ].join("\n");
+        }
+
+        function renderSandboxCode() {
+            document.getElementById('sandbox-code-output').textContent = getSandboxPlainText();
+        }
+
+        function copySandboxCode() {
+            copyToClipboard(getSandboxPlainText(), 'Sandbox payload copied to clipboard!');
+        }
+
+        function setTraceStep(id, state, badgeText) {
+            const el = document.getElementById(id);
+            el.className = 'trace-step' + (state ? ' ' + state : '');
+            el.querySelector('.trace-badge').textContent = badgeText;
+        }
+
+        document.getElementById('run-stk-btn').addEventListener('click', () => {
+            const rawPhone = document.getElementById('sim-phone').value.trim();
+            const phoneErr = document.getElementById('sim-phone-err');
+            const amountVal = parseInt(document.getElementById('sim-amount').value, 10) || 1500;
+            const refVal = (document.getElementById('sim-ref').value.trim() || 'ORDER-01').toUpperCase();
+            const pill = document.getElementById('sim-status-pill');
+            const runBtn = document.getElementById('run-stk-btn');
+
+            if (!/^(7|1)\d{8}$/.test(rawPhone)) {
+                phoneErr.style.display = 'block';
+                return;
+            }
+            phoneErr.style.display = 'none';
+
+            simContext.msisdn = '254' + rawPhone;
+            simContext.amount = amountVal;
+            simContext.reference = refVal;
+            simContext.checkoutId = 'ws_CO_' + Math.floor(100000000000 + Math.random() * 900000000000);
+            simContext.receipt = 'UKP' + Math.random().toString(36).substring(2, 9).toUpperCase();
+            simContext.outcome = simOutcome;
+
+            // Switch to request view first
+            activeSandboxTab = 'request';
+            document.querySelectorAll('.code-tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.tab === 'request');
+            });
+            renderSandboxCode();
+
+            runBtn.disabled = true;
+            runBtn.style.opacity = '0.65';
+            pill.className = 'sim-state-pill running';
+            pill.textContent = 'EXECUTING...';
+
+            setTraceStep('trace-1', 'running', 'FETCHING...');
+            setTraceStep('trace-2', '', 'QUEUED');
+            setTraceStep('trace-3', '', 'QUEUED');
+            setTraceStep('trace-4', '', 'QUEUED');
+
+            setTimeout(() => {
+                setTraceStep('trace-1', 'done', '200 OK');
+                setTraceStep('trace-2', 'running', 'SIGNING...');
+            }, 450);
+
+            setTimeout(() => {
+                setTraceStep('trace-2', 'done', 'BASE64 OK');
+                setTraceStep('trace-3', 'running', 'POSTING...');
+                showToast('STK Push sent to +' + simContext.msisdn);
+            }, 950);
+
+            setTimeout(() => {
+                setTraceStep('trace-3', 'done', 'ACCEPTED');
+                setTraceStep('trace-4', 'running', 'AWAITING PIN');
+            }, 1500);
+
+            setTimeout(() => {
+                activeSandboxTab = 'callback';
+                document.querySelectorAll('.code-tab').forEach(t => {
+                    t.classList.toggle('active', t.dataset.tab === 'callback');
+                });
+                renderSandboxCode();
+
+                if (simOutcome === 'success') {
+                    setTraceStep('trace-4', 'done', 'PAID (' + simContext.receipt + ')');
+                    pill.className = 'sim-state-pill success';
+                    pill.textContent = 'CONFIRMED (0)';
+                    showToast('Callback ResultCode 0 — Receipt ' + simContext.receipt);
+                } else if (simOutcome === 'cancelled') {
+                    setTraceStep('trace-4', 'error', 'CANCELLED (1032)');
+                    pill.className = 'sim-state-pill failed';
+                    pill.textContent = 'CANCELLED (1032)';
+                    showToast('Callback ResultCode 1032 — Cancelled by user');
+                } else {
+                    setTraceStep('trace-4', 'error', 'LOW FUNDS (1)');
+                    pill.className = 'sim-state-pill failed';
+                    pill.textContent = 'FAILED (1)';
+                    showToast('Callback ResultCode 1 — Insufficient funds');
+                }
+
+                runBtn.disabled = false;
+                runBtn.style.opacity = '1';
+            }, 2250);
+        });
+
+        renderSandboxCode();
+
+        /* ==========================================================================
+           7. RECRUITER & HIRING MANAGER INQUIRY COMPOSER
+           ========================================================================== */
+        let selectedOpportunity = 'Full-Time Software / Web Role';
+
+        document.querySelectorAll('.opp-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.opp-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                selectedOpportunity = pill.dataset.opp;
+            });
+        });
+
+        function buildOutreachMessage() {
+            const name = document.getElementById('recruiter-name').value.trim() || 'Hiring Team';
+            const company = document.getElementById('recruiter-company').value.trim() || 'Our Organization';
+            const notes = document.getElementById('recruiter-notes').value.trim() || 'We reviewed your portfolio and would like to connect regarding an opportunity.';
+
+            return [
+                'Hello Collins Saboke,',
+                '',
+                `I am reaching out from ${company} regarding a ${selectedOpportunity}.`,
+                '',
+                `Details: ${notes}`,
+                '',
+                'Looking forward to connecting,',
+                `${name} (${company})`
+            ].join('\n');
+        }
+
+        document.getElementById('recruiter-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const company = document.getElementById('recruiter-company').value.trim() || 'Opportunity';
+            const subject = encodeURIComponent(`${selectedOpportunity} — ${company}`);
+            const body = encodeURIComponent(buildOutreachMessage());
+            window.location.href = `mailto:Saboke001@gmail.com?subject=${subject}&body=${body}`;
+            showToast('Opening email draft to Saboke001@gmail.com...');
+        });
+
+        function copyOutreachDraft() {
+            copyToClipboard(buildOutreachMessage(), 'Formatted outreach draft copied!');
+        }
+    </script>
+</body>
+</html>
